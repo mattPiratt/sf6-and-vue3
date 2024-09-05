@@ -1,0 +1,41 @@
+services:
+    db:
+        image: mysql:5.7
+        user: "1000:1000"
+        volumes:
+            - ${MYSQL_DATA_PATH}:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - 3307:3306
+        networks:
+            - jobleads_network
+
+    app_jobleads_upfront_backend:
+        build: docker_web_8_2/
+        volumes:
+            - ${APP_JOBLEADS_UPFRONT_PATH}/backend:/app/upfront_backend:cached
+        links:
+            - db
+        working_dir: /app/upfront_backend
+        networks:
+            - jobleads_network
+        tty: true
+
+    app_jobleads_upfront_frontend:
+        build: docker_web_8_2/
+        volumes:
+            - ${APP_JOBLEADS_UPFRONT_PATH}/frontend:/app/upfront_frontend:cached
+        links:
+            - db
+        working_dir: /app/upfront_frontend
+        networks:
+            - jobleads_network
+        tty: true
+
+networks:
+    jobleads_network:
+        driver: bridge
