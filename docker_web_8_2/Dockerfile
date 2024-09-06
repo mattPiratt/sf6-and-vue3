@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y nodejs
 
 # Install Symfony CLI
 RUN wget https://get.symfony.com/cli/installer -O - | bash
-RUN export PATH="$HOME/.symfony5/bin:$PATH"
+RUN echo 'export PATH="$HOME/.symfony5/bin:$PATH"' >> ~/.bashrc
 
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY php-custom.ini /usr/local/etc/php/conf.d/php-custom.ini

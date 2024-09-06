@@ -21,9 +21,12 @@ services:
         links:
             - db
         working_dir: /app/upfront_backend
+        ports:
+            - 8000:8000
         networks:
             - jobleads_network
         tty: true
+        command: [ "/root/.symfony5/bin/symfony", "server:start", "--no-tls" ]
 
     app_jobleads_upfront_frontend:
         build: docker_web_8_2/
