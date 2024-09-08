@@ -2,33 +2,18 @@
 
 Recruitment task for JobLeads
 
-## Instalation
+## Installation
 
 ### Build and run docker containers
 
 ```cli
-host-machine$ docker compose build --no-cache --pull
+host-machine$ docker compose build
 ```
-
-where:
-
-`--no-cache` (default:false) Do not use cache when building the image
-
-`--pull` (default:false) Always attempt to pull a newer version of the image.
 
 Then
 
 ```cli
 host-machine$ docker-compose up -d
-```
-
-### *hosts* file
-
-On host machine where Docker engine is running, add to `/etc/hosts` file:
-( On Windows it is `C:\Windows\System32\drivers\etc\hosts` )
-
-```
-127.0.0.1       app_jobleads_upfront.local
 ```
 
 ### Running individual projects
@@ -64,7 +49,8 @@ docker-container$ ./bin/phpunit
 
 This project can be run in the browser
 
-http://app_jobleads_upfront.local/ [ admin % admin ]
+Backend API: http://127.0.0.1:8000/api/
+Frontend: http://localhost:8080/
 
 ## Xdebug
 

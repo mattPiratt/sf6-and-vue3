@@ -35,9 +35,12 @@ services:
         links:
             - db
         working_dir: /app/upfront_frontend
+        ports:
+            - 8080:8080
         networks:
             - jobleads_network
         tty: true
+        command: [ "npm", "run", "serve" ]
 
 networks:
     jobleads_network:

@@ -1,7 +1,8 @@
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
-PHP_CONTAINER = "app_jobleads_upfront_backend"
+BE_CONTAINER = "app_jobleads_upfront_backend"
+FE_CONTAINER = "app_jobleads_upfront_frontend"
 
 # ----------------------------------------------------------------------------
 # Docker
@@ -9,8 +10,14 @@ PHP_CONTAINER = "app_jobleads_upfront_backend"
 bash:
 	@make -s exec/bash
 
+bash-fe:
+	@make -s exec-fe/bash
+
 exec/%:
-	@docker-compose exec $(PHP_CONTAINER) $*
+	@docker-compose exec $(BE_CONTAINER) $*
+
+exec-fe/%:
+	@docker-compose exec $(FE_CONTAINER) $*
 
 docker-up:
 	@docker-compose up -d
@@ -38,3 +45,9 @@ static_analyser:
 # ----------------------------------------------------------------------------
 test:
 	@make -s exec/"bin/phpunit"
+
+setup_db:
+	@make -s exec/"./bin/console doctrine:database:drop --force --no-interaction"
+	@make -s exec/"./bin/console doctrine:database:create"
+	@make -s exec/"./bin/console doctrine:migration:migrate --no-interaction"
+	@make -s exec/"./bin/console doctrine:fixtures:load --no-interaction"
