@@ -9,11 +9,20 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import UserList from '../components/UserList.vue';
+import dbConnector from "@/store/dbConnectionHelper";
 
 const users = ref([]);
 
 const fetchUsers = async () => {
-    // Replace this with your API endpoint
+    const loadedUsers = await dbConnector.loadUsers();
+    users.value = loadedUsers.map(user => ({
+        ID: user.id,
+        user_email: user.userEmail,
+        first_name: user.firstName,
+        last_name: user.lastName,
+        created_at: new Date(user.createdAt).toISOString()
+            .slice(0, 16).replace('T', ' '),
+    }));
 };
 
 onMounted(fetchUsers);
