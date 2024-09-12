@@ -1,3 +1,24 @@
+<script setup>
+import {defineEmits, defineProps} from 'vue';
+
+const props = defineProps({
+    users: {
+        type: Array,
+        required: true,
+    },
+});
+
+const emit = defineEmits(['edit-user', 'delete-user']);
+
+const editUser = (user) => {
+    emit('edit-user', user);
+};
+
+const confirmDeleteUser = (user) => {
+    emit('delete-user', user);
+};
+</script>
+
 <template>
     <div class="user-list">
         <table>
@@ -20,35 +41,14 @@
                 <td>{{ user.created_at }}</td>
                 <td>
                     <!-- Buttons for edit and delete (to be implemented) -->
-                    <button @click="editUser(user)">Edit</button>
-                    <button @click="confirmDeleteUser(user)">Delete</button>
+                    <base-button @click="editUser(user)" style-mode="outline">Edit</base-button>
+                    <base-button @click="confirmDeleteUser(user)">Delete</base-button>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </template>
-
-<script setup>
-import {defineEmits, defineProps} from 'vue';
-
-const props = defineProps({
-    users: {
-        type: Array,
-        required: true,
-    },
-});
-
-const emit = defineEmits(['edit-user', 'delete-user']);
-
-const editUser = (user) => {
-    emit('edit-user', user);
-};
-
-const confirmDeleteUser = (user) => {
-    emit('delete-user', user);
-};
-</script>
 
 <style scoped>
 .user-list {

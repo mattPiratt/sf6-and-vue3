@@ -8,8 +8,9 @@
 
 <script setup>
 import {onMounted, ref} from 'vue';
-import UserList from '../components/UserList.vue';
+import UserList from '@/components/users/UserList.vue';
 import dbConnector from "@/store/dbConnectionHelper";
+import {useToast} from "vue-toastification";
 
 const users = ref([]);
 
@@ -23,6 +24,8 @@ const fetchUsers = async () => {
         created_at: new Date(user.createdAt).toISOString()
             .slice(0, 16).replace('T', ' '),
     }));
+    const toast = useToast();
+    toast.success('API data loaded successfully!');
 };
 
 onMounted(fetchUsers);
