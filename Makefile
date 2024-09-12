@@ -8,12 +8,12 @@ FE_CONTAINER = "app_jobleads_upfront_frontend"
 # Docker
 # ----------------------------------------------------------------------------
 bash:
-	@make -s exec/bash
+	@make -s exec-be/bash
 
 bash-fe:
 	@make -s exec-fe/bash
 
-exec/%:
+exec-be/%:
 	@docker-compose exec $(BE_CONTAINER) $*
 
 exec-fe/%:
