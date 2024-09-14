@@ -3,7 +3,8 @@ import {computed, onMounted, ref, watch} from 'vue';
 import {useToast} from "vue-toastification";
 import {useStore} from "vuex";
 import UserList from '@/components/users/UserList.vue';
-import dbConnector from "@/store/dbConnectionHelper";
+import dbStorageHelper from "@/store/dbStorageHelper";
+import localStorageHelper from "@/store/localStorageHelper";
 
 
 const users = ref([]);
@@ -34,7 +35,7 @@ const fetchUsers = async (templateField = 'id') => {
                 break;
         }
 
-        const loadedUsers = await dbConnector.loadUsers(field, direction);
+        const loadedUsers = await dbStorageHelper.loadUsers(field, direction);
         users.value = loadedUsers.map(user => ({
             ID: user.id,
             user_email: user.userEmail,
@@ -55,15 +56,21 @@ watch([
     () => store.getters['users/getSortDirection']
 ], ([
         newSortField,
+              newSortDirection
     ]) => {
     fetchUsers(newSortField);
+    localStorageHelper.saveSortSettings(newSortField, newSortDirection);
 });
 
 const isLoading = computed(() => {
     return store.getters.isAjaxLoading;
 });
 
-onMounted(fetchUsers);
+onMounted(() => {
+    localStorageHelper.loadSortSettings();
+    fetchUsers();
+});
+
 </script>
 
 <template>
