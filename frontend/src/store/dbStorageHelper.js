@@ -2,7 +2,7 @@ const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
     async getUsers(sortField, direction) {
-        const apiField = mapVueToApiField(sortField);
+        const apiField = mapApiToVueField[sortField];
         const response = await apiRequest(`/users?page=1&order%5B${apiField}%5D=${direction}`);
         const responseJson = await response.json();
         return responseJson.map(user => mapApiToVueData(user));
@@ -54,43 +54,24 @@ async function apiRequest(endpoint, options = {}) {
     return response;
 }
 
-const mapVueToApiField = (vueField) => {
-    let apiField;
-    switch (vueField) {
-        case 'id':
-            apiField = 'id';
-            break;
-        case 'user_email':
-            apiField = 'userEmail';
-            break;
-        case 'first_name':
-            apiField = 'firstName';
-            break;
-        case 'last_name':
-            apiField = 'lastName';
-            break;
-        case 'created_at':
-            apiField = 'createdAt';
-            break;
-    }
-    return apiField;
-};
+const mapApiToVueField = {
+    id: 'id',
+    userEmail: 'user_email',
+    firstName: 'first_name',
+    lastName: 'last_name',
+    createdAt: 'created_at',
+}
 const mapApiToVueData = (user) => {
-    return {
-        id: user.id,
-        user_email: user.userEmail,
-        first_name: user.firstName,
-        last_name: user.lastName,
-        created_at: new Date(user.createdAt).toISOString()
-            .slice(0, 16).replace('T', ' '),
-    }
+    return Object.keys(mapApiToVueField).reduce((acc, key) => {
+        acc[mapApiToVueField[key]] = key === 'created_at'
+            ? new Date(user[mapApiToVueField[key]]).toISOString().slice(0, 16).replace('T', ' ')
+            : user[key];
+        return acc;
+    }, {});
 };
 const mapVueToApiData = (user) => {
-    return {
-        id: user.id,
-        userEmail: user.user_email,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        createdAt: user.created_at,
-    }
-}
+    return Object.keys(mapApiToVueField).reduce((acc, key) => {
+        acc[key] = user[mapApiToVueField[key]];
+        return acc;
+    }, {});
+};
