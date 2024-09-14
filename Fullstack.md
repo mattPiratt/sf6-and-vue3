@@ -28,14 +28,14 @@ suggest more).
 - ORM: Doctrine / Eloquent
 - DB: MySQL / Postgresql
 
-## Frontent Part
+## Frontend Part
 
 In /frontend directory you have already prepared VUE application to display User list. Some features are missing, please
 add them:
 
 1. Bind to CRUD API and display the user's list
 2. Implement adding and modifying users using a simple form inside a modal.
-    3. Deleting users should require a confirmation modal.
+3. Deleting users should require a confirmation modal.
 4. Allow sorting by at least one column (e.g., user email). This can be done with simple buttons or clickable table
    headers.
 6. Keep the sorting persistent between page reloads.

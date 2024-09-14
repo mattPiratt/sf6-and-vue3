@@ -16,4 +16,8 @@ import TheHeader from './components/layout/TheHeader.vue';
     text-align: center;
     color: #2c3e50;
 }
+
+.float-right {
+    float: right;
+}
 </style>

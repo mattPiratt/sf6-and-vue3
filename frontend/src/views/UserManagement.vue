@@ -17,8 +17,12 @@ const showAddEditUserData = ref({
     lastName: '',
     createdAt: '',
 });
+const showDeleteUserDialog = ref(false);
+const showDeleteUserData = ref(false);
 
 const fetchUsers = async (sortField = 'id') => {
+    const toast = useToast();
+
     try {
         store.commit('setIsAjaxLoading', true, {root: true});
 
@@ -26,9 +30,9 @@ const fetchUsers = async (sortField = 'id') => {
 
         users.value = await dbStorageHelper.getUsers(sortField, direction);
     } catch (error) {
-        const toast = useToast();
         toast.error('Failed to load API data!');
     }
+
     store.commit('setIsAjaxLoading', false, {root: true});
 };
 
@@ -54,10 +58,12 @@ onMounted(() => {
 
 const handleClose = () => {
     showAddEditUserDialog.value = false;
+    showDeleteUserDialog.value = false;
 };
 
 const addOrEditUserEvent = async (user) => {
     showAddEditUserDialog.value = true;
+    const toast = useToast();
 
     try {
         const userDetailsFromDb = await dbStorageHelper.getUser(user.id);
@@ -68,12 +74,11 @@ const addOrEditUserEvent = async (user) => {
         showAddEditUserData.value.created_at = userDetailsFromDb.created_at;
         showAddEditUserDialog.value = true;
     } catch (error) {
-        const toast = useToast();
         toast.error(error);
     }
 };
 const saveUserChangesEvent = async (user) => {
-    console.log('Save user changes event', user);
+    const toast = useToast();
 
     try {
         showAddEditUserDialog.value = false;
@@ -81,9 +86,32 @@ const saveUserChangesEvent = async (user) => {
         await dbStorageHelper.updateUser(user);
         await fetchUsers(store.getters['users/getSortField']);
     } catch (error) {
-        const toast = useToast();
         toast.error('Failed to load API data!');
     }
+
+    toast.success('User updated successfully!');
+    store.commit('setIsAjaxLoading', false, {root: true});
+};
+
+const deleteUserEvent = async (user) => {
+    console.log('Delete user event', user);
+
+    showDeleteUserDialog.value = true;
+    showDeleteUserData.value = user;
+};
+const deleteUserConfirmed = async (userId) => {
+    console.log('Delete user confirmed', userId);
+
+    const toast = useToast();
+    try {
+        showDeleteUserDialog.value = false;
+        store.commit('setIsAjaxLoading', true, {root: true});
+        await dbStorageHelper.deleteUser(userId);
+        await fetchUsers(store.getters['users/getSortField']);
+    } catch (error) {
+        toast.error('Failed to load API data!');
+    }
+    toast.success('User deleted successfully!');
     store.commit('setIsAjaxLoading', false, {root: true});
 };
 
@@ -95,10 +123,14 @@ const saveUserChangesEvent = async (user) => {
         <div v-if="isLoading">
             <base-spinner></base-spinner>
         </div>
-        <UserList v-else :users="users" @edit-user="addOrEditUserEvent"/>
-        <!-- Add/Modify and Delete modals will be inserted here later -->
+        <UserList v-else :users="users"
+                  @edit-user="addOrEditUserEvent"
+                  @delete-user="deleteUserEvent"
+        />
+
         <base-dialog
             v-bind:show="showAddEditUserDialog"
+            key="showAddEditUser"
             title="Add/Edit user entry"
             @close="handleClose"
         >
@@ -107,6 +139,18 @@ const saveUserChangesEvent = async (user) => {
                 @save-changes="saveUserChangesEvent"
                 @close="handleClose"
             ></user-add-and-edit>
+        </base-dialog>
+
+        <base-dialog
+            v-bind:show="showDeleteUserDialog"
+            key="deleteUser"
+            title="Delete user entry"
+            @close="handleClose"
+        >
+            <p>Are you sure you want to delete <strong>{{ showDeleteUserData.first_name }}
+                {{ showDeleteUserData.last_name }}</strong>?</p>
+            <base-button @click="handleClose">Close</base-button>
+            <base-button @click="deleteUserConfirmed(showDeleteUserData.id)" class="float-right">Delete</base-button>
         </base-dialog>
 
     </div>

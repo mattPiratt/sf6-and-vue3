@@ -2,7 +2,7 @@ const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
     async getUsers(sortField, direction) {
-        const apiField = mapApiToVueField[sortField];
+        const apiField = mapVueToApiField(sortField);
         const response = await apiRequest(`/users?page=1&order%5B${apiField}%5D=${direction}`);
         const responseJson = await response.json();
         return responseJson.map(user => mapApiToVueData(user));
@@ -61,14 +61,22 @@ const mapApiToVueField = {
     lastName: 'last_name',
     createdAt: 'created_at',
 }
+
+function mapVueToApiField(sortField) {
+    return Object.keys(mapApiToVueField).reduce((acc, key) => {
+        return mapApiToVueField[key] === sortField ? key : acc;
+    }, '');
+}
+
 const mapApiToVueData = (user) => {
     return Object.keys(mapApiToVueField).reduce((acc, key) => {
-        acc[mapApiToVueField[key]] = key === 'created_at'
-            ? new Date(user[mapApiToVueField[key]]).toISOString().slice(0, 16).replace('T', ' ')
+        acc[mapApiToVueField[key]] = key === 'createdAt'
+            ? new Date(user[key]).toISOString().slice(0, 16).replace('T', ' ')
             : user[key];
         return acc;
     }, {});
 };
+
 const mapVueToApiData = (user) => {
     return Object.keys(mapApiToVueField).reduce((acc, key) => {
         acc[key] = user[mapApiToVueField[key]];

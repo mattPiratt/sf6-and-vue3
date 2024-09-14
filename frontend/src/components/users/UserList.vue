@@ -9,15 +9,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['edit-user', 'delete-user']);
-
-const editUser = (user) => {
-    emit('edit-user', user);
-};
-
-const confirmDeleteUser = (user) => {
-    emit('delete-user', user);
-};
-
 </script>
 
 <template>
@@ -42,8 +33,8 @@ const confirmDeleteUser = (user) => {
                 <td>{{ user.created_at }}</td>
                 <td>
                     <!-- Buttons for edit and delete (to be implemented) -->
-                    <base-button @click="editUser(user)" style-mode="outline">Edit</base-button>
-                    <base-button @click="confirmDeleteUser(user)">Delete</base-button>
+                    <base-button @click="emit('edit-user', user)" style-mode="outline">Edit</base-button>
+                    <base-button @click="emit('delete-user', user)">Delete</base-button>
                 </td>
             </tr>
             </tbody>

@@ -76,8 +76,4 @@ input {
     border-radius: 4px;
     border: 1px solid #ccc;
 }
-
-.float-right {
-    float: right;
-}
 </style>
