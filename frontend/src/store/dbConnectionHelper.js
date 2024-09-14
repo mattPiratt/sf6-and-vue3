@@ -2,68 +2,44 @@ const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
     async loadUsers(field, direction) {
-        const response = await fetch(`${API_URL}/users?page=1&order%5B${field}%5D=${direction}`, {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-            },
-        });
-        if (!response.ok) {
-            console.log('HTTP Request failed (01)');
-            throw new Error(
-                response.message || 'HTTP error:Failed to fetch list.'
-            );
-        }
+        const response = await apiRequest(`/users?page=1&order%5B${field}%5D=${direction}`);
         return await response.json();
     },
     async addUser(id, data) {
-        const response = await fetch(
-            `${API_URL}/users`,
-            {
-                method: 'POST',
-                headers: {
-                    accept: 'application/json',
-                },
-                body: JSON.stringify(data),
-            }
-        );
-        if (!response.ok) {
-            throw new Error(
-                response.message || 'HTTP error: Failed to add new.'
-            );
-        }
+        await apiRequest(`/users/${id}`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
     },
     async updateUser(id, data) {
-        const response = await fetch(
-            `${API_URL}/users/${id}`,
-            {
-                method: 'PUT',
-                headers: {
-                    accept: 'application/json',
-                },
-                body: JSON.stringify(data),
-            }
-        );
-        if (!response.ok) {
-            throw new Error(
-                response.message || 'HTTP error: Failed to update.'
-            );
-        }
+        await apiRequest(`/users/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        });
     },
     async deleteUser(id) {
-        const response = await fetch(
-            `${API_URL}/users/${id}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    accept: 'application/json',
-                },
-            }
-        );
-        if (!response.ok) {
-            throw new Error(
-                response.message || 'HTTP error: Failed to delete.'
-            );
-        }
+        await apiRequest(`/users/${id}`, {
+            method: 'DELETE',
+        });
     },
 };
+
+async function apiRequest(endpoint, options = {}) {
+    const url = `${API_URL}${endpoint}`;
+    const requestOptions = {
+        ...options,
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+        },
+    };
+    const response = await fetch(url, requestOptions);
+
+    if (!response.ok) {
+        const errorMessage = response.message || `HTTP error! Request ${url} returned status: ${response.status}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+    }
+
+    return response;
+}
