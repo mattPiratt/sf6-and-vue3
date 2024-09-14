@@ -17,6 +17,7 @@ const editUser = (user) => {
 const confirmDeleteUser = (user) => {
     emit('delete-user', user);
 };
+
 </script>
 
 <template>
@@ -24,11 +25,11 @@ const confirmDeleteUser = (user) => {
         <table>
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Created At</th>
+                <base-sortable-header sort-field="id">ID</base-sortable-header>
+                <base-sortable-header sort-field="email">Email</base-sortable-header>
+                <base-sortable-header sort-field="firstName">First Name</base-sortable-header>
+                <base-sortable-header sort-field="lastName">Last Name</base-sortable-header>
+                <base-sortable-header sort-field="createdAt">Created At</base-sortable-header>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -60,13 +61,17 @@ const confirmDeleteUser = (user) => {
     border-collapse: collapse;
 }
 
-.user-list th, .user-list td {
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    line-height: 2rem;
+    user-select: none;
+    width: 15%;
+}
+
+.user-list td {
     border: 1px solid #ddd;
     padding: 8px;
 }
 
-.user-list th {
-    background-color: #f2f2f2;
-    text-align: left;
-}
 </style>

@@ -1,5 +1,8 @@
 export default {
-    setEmailSortDirection(state, newVal) {
-        state.emailSortDirection = newVal;
+    setSortField(state, newVal) {
+        state.sortField = newVal;
+    },
+    setSortDirection(state, newVal) {
+        state.sortDirection = newVal;
     },
 };

@@ -6,7 +6,8 @@ export default {
     namespaced: true,
     state() {
         return {
-            emailSortDirection: [],
+            sortField: 'id',
+            sortDirection: 'asc',
         };
     },
     mutations,

@@ -1,6 +1,6 @@
 export default {
-    getEmailSortDirection(state) {
-        switch (state.emailSortDirection) {
+    getSortDirection(state) {
+        switch (state.sortDirection) {
             case 'asc':
                 return 'asc';
             case 'desc':
@@ -9,4 +9,7 @@ export default {
                 return '';
         }
     },
+    getSortField(state) {
+        return state.sortField;
+    }
 };

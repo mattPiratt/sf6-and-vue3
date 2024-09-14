@@ -1,8 +1,8 @@
 const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
-    async loadUsers() {
-        const response = await fetch(`${API_URL}/users`, {
+    async loadUsers(field, direction) {
+        const response = await fetch(`${API_URL}/users?page=1&order%5B${field}%5D=${direction}`, {
             method: 'GET',
             headers: {
                 accept: 'application/json',
