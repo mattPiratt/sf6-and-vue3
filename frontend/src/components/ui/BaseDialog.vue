@@ -1,6 +1,23 @@
+<script setup>
+import {defineEmits, defineProps} from 'vue';
+
+defineProps({
+    show: {
+        type: Boolean,
+        required: true,
+    },
+    title: {
+        type: String,
+        required: false,
+    },
+});
+const emit = defineEmits(['close']);
+
+</script>
+
 <template>
     <teleport to="body">
-        <div v-if="show" @click="tryClose" class="backdrop"></div>
+        <div v-if="show" @click="emit('close');" class="backdrop"></div>
         <Transition name="dialog">
             <dialog open v-if="show">
                 <header>
@@ -11,44 +28,10 @@
                 <section>
                     <slot></slot>
                 </section>
-                <menu v-if="!fixed">
-                    <slot name="actions">
-                        <base-button @click="tryClose">Close</base-button>
-                    </slot>
-                </menu>
             </dialog>
         </Transition>
     </teleport>
 </template>
-
-<script setup>
-import {defineEmits, defineProps} from 'vue';
-
-const props = defineProps({
-    show: {
-        type: Boolean,
-        required: true,
-    },
-    title: {
-        type: String,
-        required: false,
-    },
-    fixed: {
-        type: Boolean,
-        required: false,
-        default: false,
-    },
-});
-
-const emit = defineEmits(['close']);
-
-function tryClose() {
-    if (props.fixed) {
-        return;
-    }
-    emit('close');
-}
-</script>
 
 <style scoped>
 .backdrop {

@@ -26,16 +26,16 @@ const confirmDeleteUser = (user) => {
             <thead>
             <tr>
                 <base-sortable-header sort-field="id">ID</base-sortable-header>
-                <base-sortable-header sort-field="email">Email</base-sortable-header>
-                <base-sortable-header sort-field="firstName">First Name</base-sortable-header>
-                <base-sortable-header sort-field="lastName">Last Name</base-sortable-header>
-                <base-sortable-header sort-field="createdAt">Created At</base-sortable-header>
+                <base-sortable-header sort-field="user_email">Email</base-sortable-header>
+                <base-sortable-header sort-field="first_name">First Name</base-sortable-header>
+                <base-sortable-header sort-field="last_name">Last Name</base-sortable-header>
+                <base-sortable-header sort-field="created_at">Created At</base-sortable-header>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="user in props.users" :key="user.ID">
-                <td>{{ user.ID }}</td>
+            <tr v-for="user in props.users" :key="user.id">
+                <td>{{ user.id }}</td>
                 <td>{{ user.user_email }}</td>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>

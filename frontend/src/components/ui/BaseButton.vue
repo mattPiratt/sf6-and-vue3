@@ -1,9 +1,3 @@
-<template>
-    <button :class="styleMode">
-        <slot></slot>
-    </button>
-</template>
-
 <script>
 export default {
     props: {
@@ -21,6 +15,12 @@ export default {
     },
 };
 </script>
+
+<template>
+    <button :class="styleMode">
+        <slot></slot>
+    </button>
+</template>
 
 <style scoped>
 button {

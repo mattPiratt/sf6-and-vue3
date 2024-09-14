@@ -5,45 +5,26 @@ import {useStore} from "vuex";
 import UserList from '@/components/users/UserList.vue';
 import dbStorageHelper from "@/store/dbStorageHelper";
 import localStorageHelper from "@/store/localStorageHelper";
-
+import UserAddAndEdit from "@/components/users/UserAddAndEdit.vue";
 
 const users = ref([]);
 const store = useStore();
+const showAddEditUserDialog = ref(false);
+const showAddEditUserData = ref({
+    id: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+    createdAt: '',
+});
 
-const fetchUsers = async (templateField = 'id') => {
+const fetchUsers = async (sortField = 'id') => {
     try {
         store.commit('setIsAjaxLoading', true, {root: true});
 
         const direction = store.getters['users/getSortDirection'];
 
-        let field;
-        switch (templateField) {
-            case 'id':
-                field = 'id';
-                break;
-            case 'email':
-                field = 'userEmail';
-                break;
-            case 'firstName':
-                field = 'firstName';
-                break;
-            case 'lastName':
-                field = 'lastName';
-                break;
-            case 'createdAt':
-                field = 'createdAt';
-                break;
-        }
-
-        const loadedUsers = await dbStorageHelper.loadUsers(field, direction);
-        users.value = loadedUsers.map(user => ({
-            ID: user.id,
-            user_email: user.userEmail,
-            first_name: user.firstName,
-            last_name: user.lastName,
-            created_at: new Date(user.createdAt).toISOString()
-                .slice(0, 16).replace('T', ' '),
-        }));
+        users.value = await dbStorageHelper.getUsers(sortField, direction);
     } catch (error) {
         const toast = useToast();
         toast.error('Failed to load API data!');
@@ -71,6 +52,41 @@ onMounted(() => {
     fetchUsers();
 });
 
+const handleClose = () => {
+    showAddEditUserDialog.value = false;
+};
+
+const addOrEditUserEvent = async (user) => {
+    showAddEditUserDialog.value = true;
+
+    try {
+        const userDetailsFromDb = await dbStorageHelper.getUser(user.id);
+        showAddEditUserData.value.id = userDetailsFromDb.id;
+        showAddEditUserData.value.user_email = userDetailsFromDb.user_email;
+        showAddEditUserData.value.first_name = userDetailsFromDb.first_name;
+        showAddEditUserData.value.last_name = userDetailsFromDb.last_name;
+        showAddEditUserData.value.created_at = userDetailsFromDb.created_at;
+        showAddEditUserDialog.value = true;
+    } catch (error) {
+        const toast = useToast();
+        toast.error(error);
+    }
+};
+const saveUserChangesEvent = async (user) => {
+    console.log('Save user changes event', user);
+
+    try {
+        showAddEditUserDialog.value = false;
+        store.commit('setIsAjaxLoading', true, {root: true});
+        await dbStorageHelper.updateUser(user);
+        await fetchUsers(store.getters['users/getSortField']);
+    } catch (error) {
+        const toast = useToast();
+        toast.error('Failed to load API data!');
+    }
+    store.commit('setIsAjaxLoading', false, {root: true});
+};
+
 </script>
 
 <template>
@@ -79,8 +95,20 @@ onMounted(() => {
         <div v-if="isLoading">
             <base-spinner></base-spinner>
         </div>
-        <UserList v-else :users="users"/>
+        <UserList v-else :users="users" @edit-user="addOrEditUserEvent"/>
         <!-- Add/Modify and Delete modals will be inserted here later -->
+        <base-dialog
+            v-bind:show="showAddEditUserDialog"
+            title="Add/Edit user entry"
+            @close="handleClose"
+        >
+            <user-add-and-edit
+                v-bind="showAddEditUserData"
+                @save-changes="saveUserChangesEvent"
+                @close="handleClose"
+            ></user-add-and-edit>
+        </base-dialog>
+
     </div>
 </template>
 
