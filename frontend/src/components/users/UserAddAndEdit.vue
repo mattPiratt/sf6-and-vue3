@@ -117,34 +117,34 @@ const submitForm = () => {
 <style lang="scss" scoped>
 .add-and-edit-user {
     margin-top: 20px;
-}
 
-.form-group {
-    margin-bottom: 1rem;
-}
+    .form-group {
+        margin-bottom: 1rem;
 
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
 
-input {
-    width: 95%;
-    padding: 0.5rem;
-    font: inherit;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
+        input {
+            width: 95%;
+            padding: 0.5rem;
+            font: inherit;
+            border-radius: 4px;
+            border: 1px solid $primary-color;
+        }
 
-.form-group div.validation-error {
-    height: 1.5rem;
-    margin: 0;
-    padding-top: 0.5rem;
-}
+        .validation-error {
+            height: 1.5rem;
+            margin: 0;
+            padding-top: 0.5rem;
 
-.form-group div.validation-error p {
-    color: #ff7171;
-    margin-top: 0;
+            p {
+                color: $validation-error-color;
+                margin-top: 0;
+            }
+        }
+    }
 }
 </style>

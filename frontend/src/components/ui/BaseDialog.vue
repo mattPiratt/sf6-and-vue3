@@ -60,14 +60,14 @@ dialog {
 }
 
 header {
-    background-color: #3a0061;
+    background-color: $primary-color;
     color: white;
     width: 100%;
     padding: 1rem;
-}
 
-header h2 {
-    margin: 0;
+    header h2 {
+        margin: 0;
+    }
 }
 
 section {

@@ -1,6 +1,5 @@
 import {createApp, defineAsyncComponent} from 'vue';
 import App from './App.vue';
-import './assets/styles.scss'; // Assuming you have SASS setup
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseSpinner from '@/components/ui/BaseSpinner.vue';
 import BaseSortableHeader from "@/components/ui/BaseSortableHeader.vue";
@@ -9,7 +8,7 @@ import "vue-toastification/dist/index.css";
 import Store from '@/store/index.js';
 
 const BaseDialog = defineAsyncComponent(() =>
-    import('./components/ui/BaseDialog.vue')
+    import('@/components/ui/BaseDialog.vue')
 );
 
 const app = createApp(App);

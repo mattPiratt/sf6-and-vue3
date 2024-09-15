@@ -51,18 +51,18 @@ watch([
 
 <style lang="scss" scoped>
 th {
-    border: 1px solid #ddd;
+    border: 1px solid $table-border-color;
     padding: 8px;
-    background-color: #f2f2f2;
+    background-color: $secondary-color;
     text-align: left;
     cursor: pointer;
     line-height: 2rem;
     user-select: none;
     width: 15%;
-}
 
-th span.orderDirection {
-    color: #6501a1;
-    float: right;
+    span.orderDirection {
+        color: $primary-color;
+        float: right;
+    }
 }
 </style>

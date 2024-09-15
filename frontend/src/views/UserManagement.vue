@@ -176,13 +176,13 @@ const deleteUserConfirmed = async (userId) => {
 </template>
 
 <style lang="scss" scoped>
+@import '@/assets/_mixins.scss';
+
 .user-management {
     padding: 20px;
-}
 
-.user-management .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    .header {
+        @include flex-center(space-between);
+    }
 }
 </style>

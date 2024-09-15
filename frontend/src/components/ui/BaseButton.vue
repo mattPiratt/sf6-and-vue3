@@ -23,45 +23,29 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@import '@/assets/_mixins.scss';
+
+$button-border-color: darken($primary-color, 30%);
+$button-border-color-hover: darken($primary-color, 30%);
+$primary-color-dark: darken($primary-color, 15%);
+$primary-color-light: lighten($primary-color, 60%);
+
 button {
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    font: inherit;
-    background-color: #6501a1;
-    border: 1px solid #3a0061;
-    color: white;
-    cursor: pointer;
-    border-radius: 30px;
+    @include button-styles($primary-color, $button-border-color, white);
     margin-right: 0.5rem;
     display: inline-block;
 }
 
-button:hover,
-button:active {
-    background-color: #270041;
-    border-color: #270041;
-}
-
 .outline {
-    background-color: transparent;
-    border-color: #270041;
-    color: #270041;
-}
+    @include button-styles(transparent, $button-border-color, $primary-color-dark);
 
-.outline:hover,
-.outline:active {
-    background-color: #edd2ff;
+    &:hover,
+    &:active {
+        background-color: $primary-color-light;
+    }
 }
 
 .medium {
-    background-color: #edd2ff;
-    border-color: #270041;
-    color: #270041;
-}
-
-.medium:hover,
-.medium:active {
-    background-color: #270041;
-    color: white;
+    @include button-styles($primary-color-light, $button-border-color, $primary-color);
 }
 </style>

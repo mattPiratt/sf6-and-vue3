@@ -1,6 +1,6 @@
 <script setup>
-import UserManagement from './views/UserManagement.vue';
-import TheHeader from './components/layout/TheHeader.vue';
+import UserManagement from '@/views/UserManagement.vue';
+import TheHeader from '@/components/layout/TheHeader.vue';
 </script>
 
 <template>
@@ -8,13 +8,13 @@ import TheHeader from './components/layout/TheHeader.vue';
     <UserManagement/>
 </template>
 
-<style>
+<style lang="scss">
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: $font-stack;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: $text-color;
 }
 
 .float-right {

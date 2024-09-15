@@ -1,0 +1,12 @@
+.button {
+    @include button-styles($primary-color, $secondary-color, white);
+}
+
+.button-outline {
+    @include button-styles(transparent, $secondary-color, $secondary-color);
+
+    &:hover,
+    &:active {
+        background-color: lighten($secondary-color, 40%);
+    }
+}

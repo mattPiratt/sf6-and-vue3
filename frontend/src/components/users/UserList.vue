@@ -21,7 +21,7 @@ const emit = defineEmits(['edit-user', 'delete-user']);
                 <base-sortable-header sort-field="first_name">First Name</base-sortable-header>
                 <base-sortable-header sort-field="last_name">Last Name</base-sortable-header>
                 <base-sortable-header sort-field="created_at">Created At</base-sortable-header>
-                <th>Actions</th>
+                <th class="actions-th">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -45,24 +45,19 @@ const emit = defineEmits(['edit-user', 'delete-user']);
 <style lang="scss" scoped>
 .user-list {
     margin-top: 20px;
-}
 
-.user-list table {
-    width: 100%;
-    border-collapse: collapse;
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
 
-th {
-    border: 1px solid #ddd;
-    padding: 8px;
-    line-height: 2rem;
-    user-select: none;
-    width: 15%;
-}
+        th, td {
+            border: 1px solid $table-border-color;
+            padding: 8px;
+        }
 
-.user-list td {
-    border: 1px solid #ddd;
-    padding: 8px;
+        th.actions-th {
+            background-color: lighten($secondary-color, 15%);
+        }
+    }
 }
-
 </style>
