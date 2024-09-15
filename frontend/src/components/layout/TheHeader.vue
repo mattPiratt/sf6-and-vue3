@@ -5,7 +5,7 @@
     <header>
         <nav>
             <h1>
-                JobLeads recruitment app!
+                Upfront demo app!
             </h1>
         </nav>
     </header>

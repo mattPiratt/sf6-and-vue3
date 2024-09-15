@@ -12,36 +12,36 @@ services:
         ports:
             - 3307:3306
         networks:
-            - jobleads_network
+            - upfront_network
 
-    app_jobleads_upfront_backend:
+    app_upfront_backend:
         build: docker_web_8_2/
         volumes:
-            - ${APP_JOBLEADS_UPFRONT_PATH}/backend:/app/upfront_backend:cached
+            - ${APP_UPFRONT_PATH}backend:/app/upfront_backend:cached
         links:
             - db
         working_dir: /app/upfront_backend
         ports:
             - 8000:8000
         networks:
-            - jobleads_network
+            - upfront_network
         tty: true
         command: [ "/bin/bash", "start_backend.sh" ]
 
-    app_jobleads_upfront_frontend:
+    app_upfront_frontend:
         build: docker_web_8_2/
         volumes:
-            - ${APP_JOBLEADS_UPFRONT_PATH}/frontend:/app/upfront_frontend:cached
+            - ${APP_UPFRONT_PATH}frontend:/app/upfront_frontend:cached
         links:
             - db
         working_dir: /app/upfront_frontend
         ports:
             - 8080:8080
         networks:
-            - jobleads_network
+            - upfront_network
         tty: true
         command: [ "/bin/bash", "start_frontend.sh" ]
 
 networks:
-    jobleads_network:
+    upfront_network:
         driver: bridge

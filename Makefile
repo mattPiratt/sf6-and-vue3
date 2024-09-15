@@ -1,8 +1,8 @@
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
-BE_CONTAINER = "app_jobleads_upfront_backend"
-FE_CONTAINER = "app_jobleads_upfront_frontend"
+BE_CONTAINER = "app_upfront_backend"
+FE_CONTAINER = "app_upfront_frontend"
 
 # ----------------------------------------------------------------------------
 # Docker
