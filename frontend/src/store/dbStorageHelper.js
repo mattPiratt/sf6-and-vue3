@@ -13,14 +13,14 @@ export default {
         return mapApiToVueData(responseJson);
     },
     async addUser(data) {
-        await apiRequest(`/users/${data.id}`, {
+        const apiData = mapVueToApiData(data);
+        await apiRequest(`/users`, {
             method: 'POST',
-            body: JSON.stringify(data),
+            body: JSON.stringify(apiData),
         });
     },
     async updateUser(data) {
         const apiData = mapVueToApiData(data);
-        console.log("updateUser db Helper:", apiData);
         await apiRequest(`/users/${apiData.id}`, {
             method: 'PUT',
             body: JSON.stringify(apiData),

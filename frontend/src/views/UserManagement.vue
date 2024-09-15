@@ -11,7 +11,7 @@ const users = ref([]);
 const store = useStore();
 const showAddEditUserDialog = ref(false);
 const showAddEditUserData = ref({
-    id: '',
+    id: null,
     email: '',
     firstName: '',
     lastName: '',
@@ -21,8 +21,6 @@ const showDeleteUserDialog = ref(false);
 const showDeleteUserData = ref(false);
 
 const fetchUsers = async (sortField = 'id') => {
-    const toast = useToast();
-
     try {
         store.commit('setIsAjaxLoading', true, {root: true});
 
@@ -30,6 +28,7 @@ const fetchUsers = async (sortField = 'id') => {
 
         users.value = await dbStorageHelper.getUsers(sortField, direction);
     } catch (error) {
+        const toast = useToast();
         toast.error('Failed to load API data!');
     }
 
@@ -59,31 +58,44 @@ onMounted(() => {
 const handleClose = () => {
     showAddEditUserDialog.value = false;
     showDeleteUserDialog.value = false;
+
+    showAddEditUserData.value.id = null;
+    showAddEditUserData.value.user_email = '';
+    showAddEditUserData.value.first_name = '';
+    showAddEditUserData.value.last_name = '';
+    showAddEditUserData.value.created_at = '';
 };
 
-const addOrEditUserEvent = async (user) => {
-    showAddEditUserDialog.value = true;
-    const toast = useToast();
-
+const addOrEditUserEvent = async (user = null) => {
     try {
-        const userDetailsFromDb = await dbStorageHelper.getUser(user.id);
-        showAddEditUserData.value.id = userDetailsFromDb.id;
-        showAddEditUserData.value.user_email = userDetailsFromDb.user_email;
-        showAddEditUserData.value.first_name = userDetailsFromDb.first_name;
-        showAddEditUserData.value.last_name = userDetailsFromDb.last_name;
-        showAddEditUserData.value.created_at = userDetailsFromDb.created_at;
+        if (user) {
+            const userDetailsFromDb = await dbStorageHelper.getUser(user.id);
+            showAddEditUserData.value.id = userDetailsFromDb.id;
+            showAddEditUserData.value.user_email = userDetailsFromDb.user_email;
+            showAddEditUserData.value.first_name = userDetailsFromDb.first_name;
+            showAddEditUserData.value.last_name = userDetailsFromDb.last_name;
+            showAddEditUserData.value.created_at = userDetailsFromDb.created_at;
+        }
         showAddEditUserDialog.value = true;
     } catch (error) {
+        const toast = useToast();
         toast.error(error);
     }
 };
-const saveUserChangesEvent = async (user) => {
+
+const saveUserEvent = async (user) => {
     const toast = useToast();
 
     try {
         showAddEditUserDialog.value = false;
         store.commit('setIsAjaxLoading', true, {root: true});
-        await dbStorageHelper.updateUser(user);
+
+        if (user.id) {
+            await dbStorageHelper.updateUser(user);
+        } else {
+            await dbStorageHelper.addUser(user);
+        }
+
         await fetchUsers(store.getters['users/getSortField']);
     } catch (error) {
         toast.error('Failed to load API data!');
@@ -94,15 +106,12 @@ const saveUserChangesEvent = async (user) => {
 };
 
 const deleteUserEvent = async (user) => {
-    console.log('Delete user event', user);
-
     showDeleteUserDialog.value = true;
     showDeleteUserData.value = user;
 };
 const deleteUserConfirmed = async (userId) => {
-    console.log('Delete user confirmed', userId);
-
     const toast = useToast();
+
     try {
         showDeleteUserDialog.value = false;
         store.commit('setIsAjaxLoading', true, {root: true});
@@ -111,6 +120,7 @@ const deleteUserConfirmed = async (userId) => {
     } catch (error) {
         toast.error('Failed to load API data!');
     }
+
     toast.success('User deleted successfully!');
     store.commit('setIsAjaxLoading', false, {root: true});
 };
@@ -119,7 +129,11 @@ const deleteUserConfirmed = async (userId) => {
 
 <template>
     <div class="user-management">
-        <h1>User Management</h1>
+        <div class="header">
+            <h1>User Management</h1>
+            <base-button @click="addOrEditUserEvent()" style-mode="medium">Add User
+            </base-button>
+        </div>
         <div v-if="isLoading">
             <base-spinner></base-spinner>
         </div>
@@ -136,7 +150,7 @@ const deleteUserConfirmed = async (userId) => {
         >
             <user-add-and-edit
                 v-bind="showAddEditUserData"
-                @save-changes="saveUserChangesEvent"
+                @save-changes="saveUserEvent"
                 @close="handleClose"
             ></user-add-and-edit>
         </base-dialog>
@@ -159,5 +173,11 @@ const deleteUserConfirmed = async (userId) => {
 <style scoped>
 .user-management {
     padding: 20px;
+}
+
+.user-management .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>

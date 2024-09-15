@@ -2,7 +2,11 @@
 import {defineEmits, defineProps, ref, watch} from 'vue';
 
 const props = defineProps({
-    id: Number,
+    id: {
+        type: Number,
+        required: false,
+        default: null,
+    },
     user_email: String,
     first_name: String,
     last_name: String,

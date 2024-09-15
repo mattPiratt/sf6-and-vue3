@@ -52,4 +52,16 @@ button:active {
 .outline:active {
     background-color: #edd2ff;
 }
+
+.medium {
+    background-color: #edd2ff;
+    border-color: #270041;
+    color: #270041;
+}
+
+.medium:hover,
+.medium:active {
+    background-color: #270041;
+    color: white;
+}
 </style>
