@@ -1,5 +1,6 @@
 <script setup>
 import {defineEmits, defineProps, ref, watch} from 'vue';
+import {validateForm, validateOneField} from "@/composables/formValidation";
 
 const props = defineProps({
     id: {
@@ -15,44 +16,102 @@ const props = defineProps({
 
 const emit = defineEmits(['save-changes', 'close']);
 
-const user_email = ref(props.user_email);
-const first_name = ref(props.first_name);
-const last_name = ref(props.last_name);
-const created_at = ref(props.created_at);
+const isFormValid = ref(true);
+
+const form = ref({
+    user_email: {
+        value: props.user_email,
+        isValid: true,
+        validator: (self) => {
+            const emailAddress = self.value;
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
+        },
+    },
+    first_name: {
+        value: props.first_name,
+        isValid: true,
+        validator: (self) => {
+            return self.value !== '';
+        },
+    },
+    last_name: {
+        value: props.last_name,
+        isValid: true,
+        validator: (self) => {
+            return self.value !== '';
+        },
+    },
+    created_at: {
+        value: props.created_at,
+        isValid: true,
+        validator: null,
+    },
+});
 
 watch(props, (newProps) => {
-    user_email.value = newProps.user_email;
-    first_name.value = newProps.first_name;
-    last_name.value = newProps.last_name;
-    created_at.value = newProps.created_at;
+    form.value.user_email = newProps.user_email;
+    form.value.first_name = newProps.first_name;
+    form.value.last_name = newProps.last_name;
+    form.value.created_at = newProps.created_at;
 }, {deep: true});
 
+const submitForm = () => {
+    isFormValid.value = validateForm(form.value);
+
+    if (isFormValid.value === false) {
+        return false;
+    }
+
+    const data = {
+        id: props.id,
+        user_email: form.value.user_email.value,
+        first_name: form.value.first_name.value,
+        last_name: form.value.last_name.value,
+        created_at: form.value.created_at.value,
+    };
+    emit('save-changes', data);
+};
 </script>
 
 <template>
     <div class="add-and-edit-user">
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" v-model="user_email">
+            <label>Email</label>
+            <input type="email"
+                   v-model.trim="form.user_email.value"
+                   @blur="validateOneField('user_email', form)"
+            >
+            <div class="validation-error">
+                <p v-if="!form.user_email.isValid">User email is invalid</p>
+            </div>
         </div>
         <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input type="text" id="firstName" v-model="first_name">
+            <label>First Name</label>
+            <input type="text"
+                   v-model.trim="form.first_name.value"
+                   @blur="validateOneField('first_name', form)"
+            >
+            <div class="validation-error">
+                <p v-if="!form.first_name.isValid">First name must not be empty</p>
+            </div>
         </div>
         <div class="form-group">
-            <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" v-model="last_name">
+            <label>Last Name</label>
+            <input type="text"
+                   v-model.trim="form.last_name.value"
+                   @blur="validateOneField('last_name', form)"
+            >
+            <div class="validation-error">
+                <p v-if="!form.last_name.isValid">Last name must not be empty</p>
+            </div>
         </div>
+        <p v-if="!isFormValid">
+            <strong>Please fix above problems and try again.</strong>
+        </p>
         <base-button @click="emit('close')">Close</base-button>
-        <base-button @click="emit('save-changes', {
-            id: props.id,
-            user_email: user_email,
-            first_name: first_name,
-            last_name: last_name,
-            created_at: created_at,
-            })" class="float-right">Save Changes
-        </base-button>
+        <base-button @click="submitForm" class="float-right">Save Changes</base-button>
     </div>
+
 </template>
 
 <style scoped>
@@ -67,13 +126,25 @@ watch(props, (newProps) => {
 label {
     display: block;
     font-weight: bold;
+    margin-bottom: 0.5rem;
 }
 
 input {
-    width: 100%;
+    width: 95%;
     padding: 0.5rem;
     font: inherit;
     border-radius: 4px;
     border: 1px solid #ccc;
+}
+
+.form-group div.validation-error {
+    height: 1.5rem;
+    margin: 0;
+    padding-top: 0.5rem;
+}
+
+.form-group div.validation-error p {
+    color: #ff7171;
+    margin-top: 0;
 }
 </style>

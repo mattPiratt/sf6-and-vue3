@@ -40,7 +40,7 @@ watch([
     () => store.getters['users/getSortDirection']
 ], ([
         newSortField,
-              newSortDirection
+        newSortDirection
     ]) => {
     fetchUsers(newSortField);
     localStorageHelper.saveSortSettings(newSortField, newSortDirection);
@@ -87,7 +87,6 @@ const saveUserEvent = async (user) => {
     const toast = useToast();
 
     try {
-        showAddEditUserDialog.value = false;
         store.commit('setIsAjaxLoading', true, {root: true});
 
         if (user.id) {
@@ -99,6 +98,8 @@ const saveUserEvent = async (user) => {
                 direction: 'desc'
             });
         }
+        handleClose();
+
         await fetchUsers(store.getters['users/getSortField']);
 
         toast.success('User updated successfully!');
@@ -116,9 +117,10 @@ const deleteUserConfirmed = async (userId) => {
     const toast = useToast();
 
     try {
-        showDeleteUserDialog.value = false;
         store.commit('setIsAjaxLoading', true, {root: true});
         await dbStorageHelper.deleteUser(userId);
+        handleClose();
+
         await fetchUsers(store.getters['users/getSortField']);
     } catch (error) {
         toast.error('Failed to load API data!');
