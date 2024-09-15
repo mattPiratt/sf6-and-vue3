@@ -94,14 +94,17 @@ const saveUserEvent = async (user) => {
             await dbStorageHelper.updateUser(user);
         } else {
             await dbStorageHelper.addUser(user);
+            store.dispatch('users/setSorting', {
+                field: 'id',
+                direction: 'desc'
+            });
         }
-
         await fetchUsers(store.getters['users/getSortField']);
-    } catch (error) {
-        toast.error('Failed to load API data!');
-    }
 
-    toast.success('User updated successfully!');
+        toast.success('User updated successfully!');
+    } catch (error) {
+        toast.error('Failed to store data!');
+    }
     store.commit('setIsAjaxLoading', false, {root: true});
 };
 

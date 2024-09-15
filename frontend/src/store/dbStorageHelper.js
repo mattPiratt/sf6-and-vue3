@@ -14,6 +14,9 @@ export default {
     },
     async addUser(data) {
         const apiData = mapVueToApiData(data);
+        delete apiData.id;
+        delete apiData.createdAt;
+        
         await apiRequest(`/users`, {
             method: 'POST',
             body: JSON.stringify(apiData),

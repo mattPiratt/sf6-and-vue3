@@ -43,10 +43,6 @@ watch(props, (newProps) => {
             <label for="lastName">Last Name</label>
             <input type="text" id="lastName" v-model="last_name">
         </div>
-        <div class="form-group">
-            <label for="createdAt">Created At</label>
-            <input type="text" id="createdAt" v-model="created_at">
-        </div>
         <base-button @click="emit('close')">Close</base-button>
         <base-button @click="emit('save-changes', {
             id: props.id,
