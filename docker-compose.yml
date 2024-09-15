@@ -25,6 +25,8 @@ services:
             - 8000:8000
         networks:
             - upfront_network
+        depends_on:
+            - db
         tty: true
         command: [ "/bin/bash", "start_backend.sh" ]
 
@@ -39,6 +41,9 @@ services:
             - 8080:8080
         networks:
             - upfront_network
+        depends_on:
+            - db
+            - app_upfront_backend
         tty: true
         command: [ "/bin/bash", "start_frontend.sh" ]
 

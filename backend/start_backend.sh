@@ -6,12 +6,12 @@ chmod +x bin/*
 chmod +x *.sh
 composer install
 
-if ./bin/console doctrine:database:create --if-not-exists 2>&1 | grep -q "already exists"; then
-    echo "Database already exists."
-else
-    echo "Database does not exist. Creating the database..."
-    ./bin/console doctrine:schema:update --force
-    ./bin/console doctrine:fixtures:load --no-interaction
-fi
+# Wait for the database to be ready
+sleep 15
+
+./bin/console doctrine:database:drop --force --no-interaction
+./bin/console doctrine:database:create
+./bin/console doctrine:migration:migrate --no-interaction
+./bin/console doctrine:fixtures:load --no-interaction
 
 /root/.symfony5/bin/symfony server:start --no-tls
