@@ -22,7 +22,7 @@ export default {
     </button>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 button {
     text-decoration: none;
     padding: 0.75rem 1.5rem;

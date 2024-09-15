@@ -49,7 +49,7 @@ watch([
     </th>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 th {
     border: 1px solid #ddd;
     padding: 8px;

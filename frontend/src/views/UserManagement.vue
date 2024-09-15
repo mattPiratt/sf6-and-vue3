@@ -175,7 +175,7 @@ const deleteUserConfirmed = async (userId) => {
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .user-management {
     padding: 20px;
 }

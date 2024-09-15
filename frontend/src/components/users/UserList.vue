@@ -42,7 +42,7 @@ const emit = defineEmits(['edit-user', 'delete-user']);
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .user-list {
     margin-top: 20px;
 }

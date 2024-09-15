@@ -114,7 +114,7 @@ const submitForm = () => {
 
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .add-and-edit-user {
     margin-top: 20px;
 }

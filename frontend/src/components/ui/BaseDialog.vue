@@ -33,7 +33,7 @@ const emit = defineEmits(['close']);
     </teleport>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .backdrop {
     position: fixed;
     top: 0;
