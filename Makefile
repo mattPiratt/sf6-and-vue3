@@ -25,29 +25,21 @@ docker-up:
 docker-down:
 	@docker-compose down
 
-# ----------------------------------------------------------------------------
-# Update
-# ----------------------------------------------------------------------------
-update:
-	@git pull origin master
-	@make -s composer i
-	@make -s migration
-	@make -s clear_all
 
 # ----------------------------------------------------------------------------
 # Static analyse
 # ----------------------------------------------------------------------------
 static_analyser:
-	@make -s exec/"bin/phpstan analyse"
+	@make -s exec-be/"bin/phpstan analyse"
 
 # ----------------------------------------------------------------------------
 # Tests
 # ----------------------------------------------------------------------------
 test:
-	@make -s exec/"bin/phpunit"
+	@make -s exec-be/"bin/phpunit"
 
-setup_db:
-	@make -s exec/"./bin/console doctrine:database:drop --force --no-interaction"
-	@make -s exec/"./bin/console doctrine:database:create"
-	@make -s exec/"./bin/console doctrine:migration:migrate --no-interaction"
-	@make -s exec/"./bin/console doctrine:fixtures:load --no-interaction"
+recreate_db:
+	@make -s exec-be/"./bin/console doctrine:database:drop --force --no-interaction"
+	@make -s exec-be/"./bin/console doctrine:database:create"
+	@make -s exec-be/"./bin/console doctrine:migration:migrate --no-interaction"
+	@make -s exec-be/"./bin/console doctrine:fixtures:load --no-interaction"
