@@ -28,7 +28,7 @@ services:
         depends_on:
             - db
         tty: true
-        command: [ "/bin/bash", "-c", "/usr/local/bin/wait-for-it.sh db:3306 --timeout=30 --strict -- /bin/bash start_backend.sh" ]
+        command: [ "/bin/bash", "-c", "/usr/local/bin/wait-for-it.sh db:3306 --timeout=600 --strict -- /bin/bash start_backend.sh" ]
 
 
     app_upfront_frontend:
@@ -46,7 +46,7 @@ services:
             - db
             - app_upfront_backend
         tty: true
-        command: [ "/bin/bash", "start_frontend.sh" ]
+        command: [ "/bin/bash", "-c", "/usr/local/bin/wait-for-it.sh db:3306 --timeout=600 --strict -- /bin/bash start_frontend.sh" ]
 
 networks:
     upfront_network:
