@@ -28,7 +28,8 @@ services:
         depends_on:
             - db
         tty: true
-        command: [ "/bin/bash", "start_backend.sh" ]
+        command: [ "/bin/bash", "-c", "/usr/local/bin/wait-for-it.sh db:3306 --timeout=30 --strict -- /bin/bash start_backend.sh" ]
+
 
     app_upfront_frontend:
         build: docker_web_8_2/

@@ -45,5 +45,7 @@ RUN echo 'export PATH="$HOME/.symfony5/bin:$PATH"' >> ~/.bashrc
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY php-custom.ini /usr/local/etc/php/conf.d/php-custom.ini
 
+COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
 
 RUN usermod -u 1000 www-data
