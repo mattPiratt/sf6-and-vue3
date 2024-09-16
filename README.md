@@ -39,8 +39,10 @@ host-machine$ docker compose build
 Then start everything up
 
 ```cli
-host-machine$ docker-compose up -d
+host-machine$ docker-compose up
 ```
+
+...and wait few minutes for the containers to start. In the terminal window, you should see the output from the containers with information about the URLs to access the frontend and backend.
 
 ## Running in browser
 
