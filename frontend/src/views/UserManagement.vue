@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, ref, watch} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import {useToast} from "vue-toastification";
 import {useStore} from "vuex";
 import UserList from '@/components/users/UserList.vue';
@@ -22,8 +22,6 @@ const showDeleteUserData = ref(false);
 
 const fetchUsers = async (sortField = 'id') => {
     try {
-        store.commit('setIsAjaxLoading', true, {root: true});
-
         const direction = store.getters['users/getSortDirection'];
 
         users.value = await dbStorageHelper.getUsers(sortField, direction);
@@ -31,8 +29,6 @@ const fetchUsers = async (sortField = 'id') => {
         const toast = useToast();
         toast.error('Failed to load API data!');
     }
-
-    store.commit('setIsAjaxLoading', false, {root: true});
 };
 
 watch([
@@ -46,9 +42,7 @@ watch([
     localStorageHelper.saveSortSettings(newSortField, newSortDirection);
 });
 
-const isLoading = computed(() => {
-    return store.getters.isAjaxLoading;
-});
+
 
 onMounted(() => {
     localStorageHelper.loadSortSettings();
@@ -58,16 +52,19 @@ onMounted(() => {
 const handleClose = () => {
     showAddEditUserDialog.value = false;
     showDeleteUserDialog.value = false;
-
+};
+const cleanupAddEditUserData = () => {
     showAddEditUserData.value.id = null;
     showAddEditUserData.value.user_email = '';
     showAddEditUserData.value.first_name = '';
     showAddEditUserData.value.last_name = '';
     showAddEditUserData.value.created_at = '';
+
 };
 
 const addOrEditUserEvent = async (user = null) => {
     try {
+
         if (user) {
             const userDetailsFromDb = await dbStorageHelper.getUser(user.id);
             showAddEditUserData.value.id = userDetailsFromDb.id;
@@ -87,8 +84,7 @@ const saveUserEvent = async (user) => {
     const toast = useToast();
 
     try {
-        store.commit('setIsAjaxLoading', true, {root: true});
-
+        handleClose();
         if (user.id) {
             await dbStorageHelper.updateUser(user);
         } else {
@@ -98,7 +94,7 @@ const saveUserEvent = async (user) => {
                 direction: 'desc'
             });
         }
-        handleClose();
+        cleanupAddEditUserData();
 
         await fetchUsers(store.getters['users/getSortField']);
 
@@ -106,7 +102,6 @@ const saveUserEvent = async (user) => {
     } catch (error) {
         toast.error('Failed to store data!');
     }
-    store.commit('setIsAjaxLoading', false, {root: true});
 };
 
 const deleteUserEvent = async (user) => {
@@ -117,9 +112,9 @@ const deleteUserConfirmed = async (userId) => {
     const toast = useToast();
 
     try {
-        store.commit('setIsAjaxLoading', true, {root: true});
-        await dbStorageHelper.deleteUser(userId);
         handleClose();
+        await dbStorageHelper.deleteUser(userId);
+        cleanupAddEditUserData();
 
         await fetchUsers(store.getters['users/getSortField']);
     } catch (error) {
@@ -127,7 +122,6 @@ const deleteUserConfirmed = async (userId) => {
     }
 
     toast.success('User deleted successfully!');
-    store.commit('setIsAjaxLoading', false, {root: true});
 };
 
 </script>
@@ -139,10 +133,7 @@ const deleteUserConfirmed = async (userId) => {
             <base-button @click="addOrEditUserEvent()" style-mode="medium">Add User
             </base-button>
         </div>
-        <div v-if="isLoading">
-            <base-spinner></base-spinner>
-        </div>
-        <UserList v-else :users="users"
+        <UserList :users="users"
                   @edit-user="addOrEditUserEvent"
                   @delete-user="deleteUserEvent"
         />

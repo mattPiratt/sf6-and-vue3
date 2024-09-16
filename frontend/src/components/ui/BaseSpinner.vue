@@ -19,6 +19,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    margin-right: 3rem;
 }
 
 .lds-roller {
@@ -38,7 +39,7 @@
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: $primary-color;
+            background: $secondary-color;
             margin: -4px 0 0 -4px;
         }
 
